@@ -1,0 +1,139 @@
+﻿
+<%@ CodeTemplate Language="C#" ResponseEncoding="UTF-8" TargetLanguage="Text" Src="Helper.cs" Inherits="Helper" Debug="False" Description="Template description here." %>
+<%@ Property Name="DataBase" Type="SchemaExplorer.DatabaseSchema" Category="2.数据库对象"
+	Description="数据库对象" %>
+<%@ Property Name="AutoExecuteScript" Type="System.Boolean" Default="False" Category="1. 是否自动执行生成后的脚本"
+	Description="是否自动执行生成后的脚本" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<% 
+foreach(TableSchema Table in DataBase.Database.Tables)
+{
+	if (IsExceptTable(Table)) continue;
+%>
+
+<%-- Create   --%>
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[gen_<%= GetTVName(Table)%>_Create]') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE [dbo].[gen_<%= GetTVName(Table)%>_Create]
+END
+GO
+-- =============================================
+-- Create date: <%= System.DateTime.Now.ToString()%>
+-- Description: 创建<%= GetTVRemark(Table)%>
+-- =============================================
+CREATE PROCEDURE [dbo].[gen_<%= GetTVName(Table)%>_Create]
+<% if (IsIntPk(Table) && IsAutoIncreaseField(Table)) {%>
+@<%= GetFirstPKName(Table) %> int output,
+<% foreach(ColumnSchema column in Table.Columns){ if (!column.IsPrimaryKeyMember) {%>
+@<%= column.Name%> <%= GetTypeAndSize(column)%> <%=GetComma(column,Table.Columns)%>
+<%}}%>
+AS
+INSERT INTO [<%= GetTVName(Table)%>](
+<%foreach(ColumnSchema column in Table.Columns){ if (!column.IsPrimaryKeyMember) {%>
+[<%= column.Name %>]<%= GetComma(column,Table.Columns)%>
+<%}}%>)
+VALUES(<%foreach(ColumnSchema column in Table.Columns){ if (!column.IsPrimaryKeyMember) {%>
+@<%= column.Name %><%= GetComma(column,Table.Columns)%>
+<%}}%>)
+
+    <%if(!IsMorePrimary(Table) && IsAutoIncreaseField(Table))
+    {%>
+    select scope_identity();
+    <%}%>
+
+<%} else {%>
+
+<% foreach(ColumnSchema column in Table.Columns){%>
+@<%= column.Name%> <%= GetTypeAndSize(column)%> <%=GetComma(column,Table.Columns)%>
+<%}%>
+AS
+INSERT INTO [<%= GetTVName(Table)%>](
+<%foreach(ColumnSchema column in Table.Columns){%>
+[<%= column.Name %>]<%= GetComma(column,Table.Columns)%>
+<%}%>)
+VALUES(<%foreach(ColumnSchema column in Table.Columns){%>
+@<%= column.Name %><%= GetComma(column,Table.Columns)%>
+<%}%>)
+<%}%>
+
+
+<%-- Update   --%>
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[gen_<%= GetTVName(Table)%>_Update]') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE [dbo].[gen_<%= GetTVName(Table)%>_Update]
+END
+GO
+-- =============================================
+-- Create date: <%= System.DateTime.Now.ToString()%>
+-- Description: 更新<%= GetTVRemark(Table)%>
+-- =============================================
+CREATE PROCEDURE [dbo].[gen_<%= GetTVName(Table)%>_Update]
+<%foreach(ColumnSchema column in Table.Columns){%>
+@<%= column.Name%> <%= GetTypeAndSize(column)%><%=GetComma(column,Table.Columns)%>
+<%}%>
+AS
+
+UPDATE [<%= GetTVName(Table)%>] set
+<%	foreach(ColumnSchema column in Table.Columns){%>
+	<%= GetInsertParam(Table,column)%> <%= GetMorePrimaryEqual(Table,column)%> <%= GetInsertInOrOutParam(Table,column)%><%= GetMorePrimaryComma(Table,column,Table.Columns)%>
+<%}%>
+WHERE <%if(!IsMorePrimary(Table)){%>
+<%= Table.PrimaryKey.MemberColumns[0].Name%> = @<%= Table.PrimaryKey.MemberColumns[0].Name%>
+<%}else{
+	foreach(ColumnSchema column in Table.PrimaryKey.MemberColumns){%>
+	[<%= column.Name%>] = @<%= column.Name%> <%= GetAnd(column,Table.PrimaryKey.MemberColumns)%>
+<%}}%>
+
+
+<%}%>
+
+
+<script runat="template">
+// My methods here.
+
+protected override void OnPostRender(string result) 
+{
+	
+	if (this.AutoExecuteScript)
+	{
+		// execute the output on the same database as the source table.
+		// 执行上面生成的脚本。
+		CodeSmith.BaseTemplates.ScriptResult scriptResult = CodeSmith.BaseTemplates.ScriptUtility.ExecuteScript(this.DataBase.Database.ConnectionString, result, 
+		new System.Data.SqlClient.SqlInfoMessageEventHandler(cn_InfoMessage)); 
+		Trace.Write(scriptResult.ToString());
+	}
+	base.OnPostRender(result);
+}
+
+public void StordReader(string result)
+{
+	if (this.AutoExecuteScript)
+	{
+		// execute the output on the same database as the source table.
+		// 执行上面生成的脚本。
+		CodeSmith.BaseTemplates.ScriptResult scriptResult = CodeSmith.BaseTemplates.ScriptUtility.ExecuteScript(this.DataBase.Database.ConnectionString, result, 
+		new System.Data.SqlClient.SqlInfoMessageEventHandler(cn_InfoMessage)); 
+		Trace.Write(scriptResult.ToString());
+	}
+}
+
+private void cn_InfoMessage(object sender, System.Data.SqlClient.SqlInfoMessageEventArgs e)
+{
+	//输出异常信息。
+	Trace.WriteLine(e.Message);
+}
+</script>

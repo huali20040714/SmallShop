@@ -1,0 +1,354 @@
+﻿<%@ CodeTemplate Language="C#" ResponseEncoding="UTF-8" TargetLanguage="Text" Src="Helper.cs" Inherits="Helper" Debug="False" Description="Template description here." %>
+<%@ Property Name="NameSpace" Type="System.String" Default="" Optional="false" Category="1.命名空间" Description="当前生成命名空间" %>
+<%@ Property Name="UtilitiesNameSpace" Type="System.String" Default="" Optional="false" Category="1.工具类" Description="当前工具类命名空间" %>
+<%@ Property Name="DataBase" Type="SchemaExplorer.DatabaseSchema" Category="2.数据库对象" Description="数据库对象" %>
+<%@ Property Name="ModuleName" Type="System.String" Default="" Optional="false" Category="" Description="项目名称" %>
+
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="System" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+using System.Data.SqlClient;
+using <%= UtilitiesNameSpace %>.Utilities;
+using <%= NameSpace %>.Entities;
+
+namespace <%= NameSpace%>.Data
+{
+   public partial class DataProvider
+   {
+		private string connectionString;
+        private bool initialized = false;
+        
+        private DataProvider()
+        {
+            Initialize();
+        }
+        
+        public static DataProvider Instance = new DataProvider();
+				
+        public string ConnectionString
+        {
+            get
+            {
+                return connectionString;
+            }
+        }
+
+        public void Initialize(string connnStr = "")
+        {
+            if (!string.IsNullOrEmpty(connnStr))
+            {
+                initialized = true;
+                connectionString = connnStr;
+                <%= UtilitiesNameSpace %>.Utilities.DbProxy.DbProxy.Init(connectionString);
+            }
+            else if (!initialized)
+            {
+                connectionString = ConfigHelper.ConnectionString;
+                if (!string.IsNullOrEmpty(connectionString))
+                {
+                    <%= UtilitiesNameSpace %>.Utilities.DbProxy.DbProxy.Init(connectionString);
+                    initialized = true;
+                }
+            }
+        }
+		
+		#region generated code here
+		
+	<%foreach(TableSchema tv in DataBase.Tables)
+	{
+		if (IsExceptTable(tv)) continue;
+	%>
+    	#region <%= GetTVRemark(tv) %>
+		
+		<%-- Create --%>
+		<% if (IsIntPk(tv)) {%>
+        public void Create<%= GetClassName(tv) %>(<%= GetClassName(tv)%>Info entity)
+        {
+          	SqlConnection conn = new SqlConnection(ConnectionString);
+          	SqlCommand cmd = GetCreate<%= GetClassName(tv) %>Command(entity);
+            cmd.Connection = conn;
+			using (conn)
+			{
+				conn.Open();
+                object obj = cmd.ExecuteScalar();
+                if (obj != null && obj != DBNull.Value)
+                {
+                    entity.<%= GetFirstPKName(tv) %> = Convert.ToInt32(obj);
+                }
+			}
+        }
+        
+        public SqlCommand GetCreate<%= GetClassName(tv) %>Command(<%= GetClassName(tv)%>Info entity)
+        {
+          	SqlCommand cmd = new SqlCommand("gen_<%= GetTVName(tv)%>_Create");
+            cmd.CommandType = CommandType.StoredProcedure;
+			SqlHelper.AddInParameter(cmd, "@<%= GetFirstPKName(tv) %>", SqlDbType.Int, 4, entity.<%= GetFirstPKName(tv) %>);
+			<%foreach(ColumnSchema column in tv.Columns){ if (column.Name != GetFirstPKName(tv)) {%>
+			SqlHelper.AddInParameter(cmd, "@<%= column.Name%>", SqlDbType.<%=GetSqlDbType(column)%>, <%=GetParamSize(column)%>, <%= GetSqlParaValue(column)%>);
+			<%}}%>
+			
+            return cmd;
+        }        
+		<% } else { %>
+        public <%= GetClassName(tv) %>Info Create<%= GetClassName(tv) %>(<%= GetClassName(tv)%>Info entity)
+        {
+          	SqlConnection conn = new SqlConnection(ConnectionString);
+          	SqlCommand cmd = new SqlCommand("gen_<%= GetTVName(tv)%>_Create", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+			<%foreach(ColumnSchema column in tv.Columns){%>
+			SqlHelper.AddInParameter(cmd, "@<%= column.Name%>", SqlDbType.<%=GetSqlDbType(column)%>, <%=GetParamSize(column)%>, <%= GetSqlParaValue(column)%>);
+			<%}%>
+			using (conn)
+			{
+				conn.Open();
+                cmd.ExecuteNonQuery();
+			}
+            
+			return entity;
+        }
+        
+        public SqlCommand GetCreate<%= GetClassName(tv) %>Command(<%= GetClassName(tv)%>Info entity)
+        {
+          	SqlCommand cmd = new SqlCommand("gen_<%= GetTVName(tv)%>_Create");
+            cmd.CommandType = CommandType.StoredProcedure;
+			<%foreach(ColumnSchema column in tv.Columns){%>
+			SqlHelper.AddInParameter(cmd, "@<%= column.Name%>", SqlDbType.<%=GetSqlDbType(column)%>, <%=GetParamSize(column)%>, <%= GetSqlParaValue(column)%>);
+			<%}%>
+			
+            return cmd;
+        }
+		<% } %>
+	
+	    <%-- Update --%>
+        public void Update<%= GetClassName(tv)%>(<%= GetClassName(tv)%>Info entity)
+        {
+          	SqlConnection conn = new SqlConnection(ConnectionString);
+          	SqlCommand cmd = GetUpdate<%= GetClassName(tv) %>Command(entity);
+            cmd.Connection = conn;
+			using (conn)
+			{
+				conn.Open();
+                cmd.ExecuteNonQuery();
+			}
+     	}
+        
+        public void Update<%= GetClassName(tv)%>(string whereClause, params string[] fieldEquations)
+        {
+          	if (string.IsNullOrEmpty(whereClause) || fieldEquations.Length == 0)
+                throw new ArgumentNullException();
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("UPDATE [<%= GetClassName(tv)%>] SET ");
+            for (int i = 0; i < fieldEquations.Length; i++)
+			{
+			    if(i == 0)
+                    sb.Append(fieldEquations[i]);
+                else
+                    sb.Append("," + fieldEquations[i]);
+			}
+
+            sb.Append(string.Format(" where {0}", SqlHelper.ClearUnsafeString(whereClause)));
+
+            SqlConnection conn = new SqlConnection(ConnectionString);
+            SqlCommand cmd = new SqlCommand(sb.ToString(), conn);
+            using (conn)
+            {
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+     	}
+        
+        public SqlCommand GetUpdate<%= GetClassName(tv) %>Command(<%= GetClassName(tv)%>Info entity)
+        {
+          	SqlCommand cmd = new SqlCommand("gen_<%= GetTVName(tv)%>_Update");
+            cmd.CommandType = CommandType.StoredProcedure;
+			<%foreach(ColumnSchema column in tv.Columns){%>
+			SqlHelper.AddInParameter(cmd, "@<%= column.Name%>", SqlDbType.<%=GetSqlDbType(column)%>, <%=GetParamSize(column)%>, <%= GetSqlParaValue(column)%>);
+			<%}%>
+			
+            return cmd;
+        }
+        
+		<%-- Deletes --%>
+        public void Delete<%= GetClassNames(tv)%>(string whereClause)
+		{
+		    StringBuilder sb = new StringBuilder();
+            sb.Append("DELETE FROM [<%= GetTVName(tv)%>]");
+			if (!string.IsNullOrEmpty(whereClause))
+            	sb.Append(string.Format(" where {0}", SqlHelper.ClearUnsafeString(whereClause)));
+                
+			SqlConnection conn = new SqlConnection(ConnectionString);
+            SqlCommand cmd = new SqlCommand(sb.ToString(), conn);
+            using (conn)
+            {
+               	conn.Open();
+				cmd.ExecuteNonQuery();
+            }
+		}
+	
+	    <%-- Get --%>
+        public <%= GetClassName(tv)%>Info Get<%= GetClassName(tv)%>(<%= GetPKString3(tv) %>)
+     	{
+			SqlBuilder filter = new SqlBuilder();
+			<%foreach(ColumnSchema column in tv.PrimaryKey.MemberColumns){%>
+			filter.AppendEquals(<%= GetClassName(tv)%>Cols.<%= column.Name %>, <%= GetColumnSqlValue(column) %>, <%= IsValuePK(column)? "false" : "true" %>);
+			<%}%>
+			List<<%= GetClassName(tv)%>Info> list = Get<%= GetClassNames(tv)%>(filter.ToString(), "");
+			
+            return list.Count > 0 ? list[0] : null;
+      	}
+	
+		<%-- Gets --%>
+        public List<<%= GetClassName(tv) %>Info> Get<%= GetClassNames(tv)%>()
+        {
+            return Get<%= GetClassNames(tv)%>(null, "");
+        }
+		
+		<%-- Gets --%>
+        public List<<%= GetClassName(tv) %>Info> Get<%= GetClassNames(tv)%>(string whereClause)
+        {
+            return Get<%= GetClassNames(tv)%>(whereClause, "");
+        }
+
+        public List<<%= GetClassName(tv) %>Info> Get<%= GetClassNames(tv)%>(string whereClause, string orderbyClause)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("SELECT * FROM [<%= GetTVName(tv)%>] with(nolock)");
+			if (!string.IsNullOrEmpty(whereClause))
+            	sb.Append(string.Format(" where {0}", SqlHelper.ClearUnsafeString(whereClause)));
+                
+            if (!string.IsNullOrEmpty(orderbyClause))
+				sb.Append(string.Format(" order by {0}", SqlHelper.ClearUnsafeString(orderbyClause)));
+                
+			SqlConnection conn = new SqlConnection(ConnectionString);
+            SqlCommand cmd = new SqlCommand(sb.ToString(), conn);
+            List<<%= GetClassName(tv)%>Info> entities = new List<<%= GetClassName(tv)%>Info>();
+            using (conn)
+            {
+                conn.Open();
+                using (IDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        <%= GetClassName(tv)%>Info entity = new <%= GetClassName(tv)%>Info();
+                        Populate<%= GetClassName(tv)%>(reader, entity);
+                        entities.Add(entity);
+                    }
+					reader.Close();
+                }
+            }
+            
+            return entities;
+        }
+		
+		<%-- GetsPaged --%>
+        public List<<%= GetClassName(tv)%>Info> Get<%= GetClassNames(tv)%>(IQuery queryParams)
+        {
+			return Get<%= GetClassNames(tv)%>(null, queryParams);
+        }
+        
+        public List<<%= GetClassName(tv)%>Info> Get<%= GetClassNames(tv)%>(string whereClause, IQuery queryParams)
+        {
+			int rowCount = 0;
+            List<<%= GetClassName(tv)%>Info> list = Get<%= GetClassNames(tv)%>(whereClause, queryParams.GetOrderByClause(), queryParams.PageIndex, queryParams.PageSize, out rowCount);
+            queryParams.RecordCount = rowCount;
+            
+            return list;
+        }
+        
+        public List<<%= GetClassName(tv)%>Info> Get<%= GetClassNames(tv)%>(string whereClause, string orderbyClause, int pageIndex, int pageSize, out int rowCount)
+        {
+            rowCount = 0;
+            if (!string.IsNullOrEmpty(whereClause))
+				whereClause = " where " + SqlHelper.ClearUnsafeString(whereClause);
+                
+            if (string.IsNullOrEmpty(orderbyClause))
+				orderbyClause = "(select 0)";
+            else
+                orderbyClause = SqlHelper.ClearUnsafeString(orderbyClause).ToSafeSql(false);
+            
+            int start = pageSize * (pageIndex - 1);            
+            string sql = @"SELECT * FROM [<%= GetTVName(tv)%>] with(nolock) {0} order by {1} offset {2} rows fetch next {3} rows only;
+						   SELECT Count(1) As recordCount From [<%= GetTVName(tv)%>] with(nolock) {0};";
+            sql = string.Format(sql, whereClause, orderbyClause, start, pageSize);			
+            SqlConnection conn = new SqlConnection(ConnectionString);
+            SqlCommand cmd = new SqlCommand(sql, conn);
+            List<<%= GetClassName(tv)%>Info> entities = new List<<%= GetClassName(tv)%>Info>();
+            using (conn)
+            {
+                conn.Open();
+                using (IDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        <%= GetClassName(tv)%>Info entity = new <%= GetClassName(tv)%>Info(); 
+                        Populate<%= GetClassName(tv)%>(reader, entity);
+                        entities.Add(entity);
+                    }
+                    if (reader.NextResult() && reader.Read())
+                        rowCount = (int)reader["recordCount"];
+                }
+            }
+            
+            return entities;
+        }
+                
+		private static void Populate<%= GetClassName(tv)%>(IDataReader reader, <%= GetClassName(tv)%>Info entity)
+		{
+			<%foreach(ColumnSchema column in tv.Columns)	{%>
+			if (reader.HasColumn("<%= column.Name%>"))
+				entity.<%= GetPropertyName(column)%> = <%= GetPopulateType(column)%>reader["<%= column.Name%>"];
+			
+            <%}%>
+		}		
+        
+		#endregion
+        
+		<%}%>        
+		#endregion 
+   }
+}
+
+<script runat="template">
+public string GetDBNullValue(ColumnSchema column)
+{
+	return "";
+}
+
+public string GetParaStr(Para para)
+{
+	if (para.Direction == System.Data.ParameterDirection.Input)
+		return string.Format("SqlHelper.MakeInParam(cmd, \"{0}\", SqlDbType.{1}, {2}, {3});", para.SpName, para.SpType, para.SpSize, para.MethodName);
+	if (para.Direction == System.Data.ParameterDirection.InputOutput)
+		return string.Format("SqlHelper.MakeOutParam(cmd, \"{0}\", SqlDbType.{1}, {2});", para.SpName, para.SpType, para.SpSize);
+	//if (para.Direction == System.Data.ParameterDirection.InputOutput)
+		//return string.Format("SqlHelper.MakeInOutParam(cmd, \"{0}\", SqlDbType.{1}, {2}, {3});", para.SpName, para.SpType, para.SpSize, para.MethodName);
+	throw new Exception("para.Direction 超出范围");
+}
+
+public string GetOutParaStr(Para para)
+{
+	if (para.Direction == System.Data.ParameterDirection.Output ||
+	    para.Direction == System.Data.ParameterDirection.InputOutput)
+		return string.Format("{0} = ({1})cmd.Parameters[\"{2}\"].Value;", para.MethodName, para.MethodType, para.SpName);
+	return "";
+}
+
+public string GetNextResultStr(Para para)
+{
+	if (para.Direction == System.Data.ParameterDirection.Output ||
+	    para.Direction == System.Data.ParameterDirection.InputOutput)
+		return "reader.NextResult();";
+	return "";
+}
+
+</script>

@@ -1,0 +1,239 @@
+﻿<%@ CodeTemplate Language="C#" ResponseEncoding="UTF-8" TargetLanguage="Text" Src="Helper.cs" Inherits="Helper" Debug="False" Description="Template description here."%>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>　
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.IO" %>
+
+<%@ Property Name="DataBase" Type="SchemaExplorer.DatabaseSchema" Category="" Description="当前生成的数据库对象" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="SmallShop" Optional="false" Category="" Description="当前生成命名空间" %>
+<%@ Property Name="UtilitiesNameSpace" Type="System.String" Default="SmallShop" Optional="false" Category="" Description="当前工具类命名空间" %>
+<%@ Property Name="ProjectName" Type="System.String" Default="SmallShop" Optional="false" Category="" Description="项目名称" %>
+<%@ Property Name="ModuleName" Type="System.String" Default="Data" Optional="false" Category="" Description="项目名称" %>
+<%@ Property Name="AutoExecuteScript" Type="System.Boolean" Default="true" Category="" Description="是否自动执行生成后的脚本" %>
+<%@ Property Name="ChangedTableOrView" Type="System.Boolean" Default="true" Category="" Description="是否更新了表或视图" %>
+
+<%@ Register Name="EntityType" Template="EntityType.cst"%>
+<%@ Register Name="EntityManager" Template="EntityManager.cst"%>
+<%@ Register Name="AbstractProvider" Template="AbstractProvider.cst"%>	
+<%@ Register Name="BusinessObject" Template="BusinessObject.cst"%>
+<%@ Register Name="SqlProvider" Template="SqlProvider.cst"%>
+<%@ Register Name="SqlStoredProcedures" Template="SqlStoredProcedures.cst"%>
+<%@ Register Name="EntityBuilder" Template="EntityBuilder.cst"%>
+<%@ Register Name="EntityColumn" Template="EntityColumn.cst"%>
+<script runat="template">
+// My methods here.
+// 生成文件的方法
+public override void Render(System.IO.TextWriter writer)
+{
+	string projectDirectory=OutputDirectory;
+    
+    writer.WriteLine(projectDirectory);
+    
+	//------------------
+    //EntityType
+	//------------------
+	if (ChangedTableOrView)
+	{
+		EntityType entityType=new EntityType();
+		entityType.NameSpace=this.NameSpace;
+		entityType.DataBase=this.DataBase;
+		string entityTypeDir = projectDirectory + "\\";
+		string entityTypeFilePath = entityTypeDir + ProjectName + ".Entities\\Enum\\EntityType.generated.cs";
+        
+        writer.WriteLine("entityTypeFilePath="+entityTypeFilePath);
+        
+		if (!Directory.Exists(entityTypeDir)) Directory.CreateDirectory(entityTypeDir);
+		try
+		{
+			entityType.RenderToFile(entityTypeFilePath,true);
+		}
+		catch(Exception ex)
+		{
+			OutPutErrorMessage("EntityType",ex.StackTrace + "[ExceptionMessage:]" + ex.Message);
+		}
+		Trace.WriteLine("The "+entityTypeFilePath.ToString()+" is completed");
+	}
+	
+	//------------------
+	//SqlDataProvider
+	//------------------
+	SqlProvider sqlProvider= new SqlProvider();
+	sqlProvider.NameSpace = this.NameSpace;
+	sqlProvider.UtilitiesNameSpace = this.UtilitiesNameSpace;
+	sqlProvider.DataBase=this.DataBase;
+	sqlProvider.ModuleName=this.ModuleName;
+	string sqlProviderDirectory=projectDirectory+"\\";
+	string sqlProviderFilePath=sqlProviderDirectory+ProjectName + ".Data\\DataProvider.generated.cs";
+	if (!Directory.Exists(sqlProviderDirectory)) Directory.CreateDirectory(sqlProviderDirectory);
+	try
+	{
+        writer.WriteLine("sqlProviderFilePath="+sqlProviderFilePath);
+		sqlProvider.RenderToFile(sqlProviderFilePath,true);
+	}
+	catch(Exception ex)
+	{
+		OutPutErrorMessage("SqlProvider",ex.StackTrace + "[ExceptionMessage:]" + ex.Message);
+	}	
+	Trace.WriteLine("The "+sqlProviderFilePath.ToString()+" is completed");
+	
+	//------------------
+	//businessObject Table
+	//------------------	
+	if (ChangedTableOrView)
+	{
+		Trace.WriteLine("BusinessObjects Table");
+		foreach(TableSchema Table in DataBase.Tables)
+		{
+			if (IsExceptTable(Table))
+				continue;
+			BusinessObject businessObject=new BusinessObject();
+			businessObject.NameSpace=this.NameSpace;
+			businessObject.Table=Table;
+			string businessObjectDirectory=projectDirectory+"\\"+ProjectName + ".Entities";
+			string businessObjectFilePath=businessObjectDirectory+"\\"+GetClassName(Table)+".generated.cs";
+			if (!Directory.Exists(businessObjectDirectory)) Directory.CreateDirectory(businessObjectDirectory);
+			try
+			{
+				businessObject.RenderToFile(businessObjectFilePath,true);
+			}
+			catch(Exception ex)
+			{
+				OutPutErrorMessage(businessObjectFilePath,ex.StackTrace + "[ExceptionMessage:]" + ex.Message);
+			}
+			Trace.WriteLine("The "+businessObjectFilePath.ToString()+" is completed");
+		}
+	}
+	
+	//------------------
+	//EntityBuilder.cst
+	//------------------
+	if (ChangedTableOrView)
+	{
+		EntityBuilder entityBuilder=new EntityBuilder();
+		entityBuilder.NameSpace=this.NameSpace;
+		entityBuilder.DataBase=this.DataBase;
+		string entityBuilderDirectory=projectDirectory+"\\"+ProjectName + ".Entities\\";
+		string entityBuilderFilePath=entityBuilderDirectory+"FilterBuilder.generated.cs";
+		if (!Directory.Exists(entityBuilderDirectory)) Directory.CreateDirectory(entityBuilderDirectory);
+		//try
+		//{
+			//entityBuilder.RenderToFile(entityBuilderFilePath,true);
+		//}
+		//catch(Exception ex)
+		//{
+			//OutPutErrorMessage("entityBuilderFilePath",ex.StackTrace + "[ExceptionMessage:]" + ex.Message);
+		//}
+		//Trace.WriteLine("The "+entityBuilderFilePath.ToString()+" is completed");
+	}
+	
+	//------------------
+	//EntityColumn.cst
+	//------------------	
+	if (ChangedTableOrView)
+	{
+		EntityColumn entityColumn=new EntityColumn();
+		entityColumn.NameSpace=this.NameSpace;
+		entityColumn.DataBase=this.DataBase;
+		string entityColumnDirectory=projectDirectory+"\\"+ProjectName + ".Entities\\Enum\\";
+		string entityColumnFilePath=entityColumnDirectory+"EntityColumns.generated.cs";
+		if (!Directory.Exists(entityColumnDirectory)) Directory.CreateDirectory(entityColumnDirectory);
+		try
+		{
+			entityColumn.RenderToFile(entityColumnFilePath,true);
+		}
+		catch(Exception ex)
+		{
+			OutPutErrorMessage(entityColumnFilePath,ex.StackTrace + "[ExceptionMessage:]" + ex.Message);
+		}
+		Trace.WriteLine("The "+entityColumnFilePath.ToString()+" is completed");
+	}
+	
+	//------------------
+	//sqlScript
+	//------------------
+	if (AutoExecuteScript)
+	{
+		SqlStoredProcedures sqlStoredProcedures= new SqlStoredProcedures();
+		sqlStoredProcedures.AutoExecuteScript = this.AutoExecuteScript;
+		sqlStoredProcedures.DataBase = DataBase;
+		string sqlStoredProceduresDirectory=SqlOutputDirectory+"\\";
+		string sqlStoredProceduresFilePath=sqlStoredProceduresDirectory+"99.SqlStoredProcedures.generated.sql";
+		if (!Directory.Exists(sqlStoredProceduresDirectory)) 
+			Directory.CreateDirectory(sqlStoredProceduresDirectory);
+        
+        writer.WriteLine("sqlStoredProceduresFilePath="+sqlStoredProceduresFilePath);        
+		try
+		{
+			sqlStoredProcedures.RenderToFile(sqlStoredProceduresFilePath,true);
+		}
+		catch(Exception ex)
+		{
+			OutPutErrorMessage("SqlStoredProcedures",ex.StackTrace + "[ExceptionMessage:]" + ex.Message);
+		}	
+		Trace.WriteLine("The "+sqlStoredProceduresFilePath.ToString()+" is completed");
+	}
+	
+	writer.WriteLine("Done!!");
+}
+
+//--------------------------------------------------------------------------------------------
+
+//取得要存放文件的目录
+private string _outputDirectory = String.Empty;
+
+[Editor(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))] 
+[Optional]
+[Category("Output")]
+[Description("The directory to output the results to.")]
+public string OutputDirectory 
+{
+	get
+	{
+		// default to the directory that the template is located in
+		if (_outputDirectory.Length == 0) return this.CodeTemplateInfo.DirectoryName + "output\\";
+		
+		return _outputDirectory;
+	}
+	set
+	{
+		_outputDirectory = value;
+	}
+}
+
+//取得Sql脚本要存放文件的目录
+private string _sqlOutputDirectory = String.Empty;
+[Editor(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))] 
+[Optional]
+[Category("Output")]
+[Description("The directory to output the results to.")]
+public string SqlOutputDirectory 
+{
+	get
+	{
+		// default to the directory that the template is located in
+		if (_sqlOutputDirectory.Length == 0) return this.CodeTemplateInfo.DirectoryName + "output\\";
+		
+		return _sqlOutputDirectory;
+	}
+	set
+	{
+		_sqlOutputDirectory = value;
+	}
+}
+
+
+private void OutPutErrorMessage(string Name,string errorMessage)
+{
+		Trace.WriteLine(Name);
+		Trace.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+		Trace.WriteLine(errorMessage);
+		Trace.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+	
+}
+</script>

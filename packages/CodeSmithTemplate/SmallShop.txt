@@ -1,0 +1,5 @@
+﻿D:\Works\SmallShop
+entityTypeFilePath=D:\Works\SmallShop\SmallShop.Entities\Enum\EntityType.generated.cs
+sqlProviderFilePath=D:\Works\SmallShop\SmallShop.Data\DataProvider.generated.cs
+sqlStoredProceduresFilePath=D:\Works\SmallShop\SmallShop.Data\SPs\99.SqlStoredProcedures.generated.sql
+Done!!

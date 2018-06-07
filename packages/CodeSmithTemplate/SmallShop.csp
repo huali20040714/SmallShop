@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <variables>
+    <add key="ConnectionString1" value="Data Source=.;Initial Catalog=SmallShop;User ID=sa;Password=1" />
+  </variables>
+  <propertySets>
+    <propertySet name="SmallShop.txt" output="SmallShop.txt" template="SmallShop.cst">
+      <property name="NameSpace">SmallShop</property>
+      <property name="UtilitiesNameSpace">SmallShop</property>
+      <property name="ProjectName">SmallShop</property>
+      <property name="ModuleName">Data</property>
+      <property name="AutoExecuteScript">True</property>
+      <property name="ChangedTableOrView">True</property>
+      <property name="OutputDirectory">D:\Works\SmallShop</property>
+      <property name="DataBase">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="SqlOutputDirectory">D:\Works\SmallShop\SmallShop.Data\SPs</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>
