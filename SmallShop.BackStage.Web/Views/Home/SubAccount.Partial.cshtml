@@ -1,0 +1,28 @@
+﻿@model List<UserInfo>
+@{
+    if (Model == null || Model.Count == 0)
+    {
+        <tr><td colspan='100' class='nodata'>没有数据</td></tr>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.LoginName</td>
+                <td>@item.Tel</td>
+                <td>@Html.RenderBitText(@item.IsLocked)</td>
+                <td>
+                    @item.AvailableTime.ToDateTime() <br />@Html.Raw(item.AvailableTime.ToDays())
+                </td>
+                <td>@item.CreateTime.ToDateTime()</td>
+                <td>
+                    <a class="btn-sm btn-info" href="javascript:void(0);" onclick="subAccountEditor(@item.Id)">编辑</a>
+                    <a class="btn-sm btn-info" href="javascript:void(0);" onclick="subAccountChangePassword(@item.Id)">修改密码</a>
+                    <a class='btn-sm @(item.IsLocked ? "btn-success" : "btn-danger")' href="javascript:void(0);" onclick="changesubAccountLockStatus(@item.Id, @(item.IsLocked ? 0 : 1))">@(item.IsLocked ? "启用" : "锁定")</a>
+                    @*<a class="btn-sm btn-danger" href="javascript:void(0);" onclick="subAccountDelete(@item.Id)">删除</a>*@
+                </td>
+            </tr>
+        }
+    }
+}

@@ -1,0 +1,50 @@
+﻿@section HeaderContent{
+    @Scripts.Render("~/Views/System/OperationLog.cshtml.js?v=" + StringUtil.Version)
+    <style>
+        #ddlOperationType { width: 120px; }
+        .col1, .col2, .col3, .col4, .col6 { max-width: 150px; min-width: 100px; }
+        .col5 { width:auto;}
+    </style>
+}
+@Html.RenderPaginationHiddenInput()  @*绘制分页和排序使用到的隐藏变量*@
+
+<div class="row-fluid header">
+    <span class="span10">
+        <select id="ddlVague" class="input-sm">
+            <option value="0">精确</option>
+            <option value="1">模糊</option>
+        </select>
+        @Html.Select(typeof(OperationType), "ddlOperationType", true, "-1", "所有操作类型", "input-sm")
+        <input type="text" id="txtLoginName" placeholder="帐号查询" class="input-sm" value='@Request.QueryString["LoginName"]' />
+        <input type="text" id="txtBusinessName" placeholder="业务名称查询" class="input-sm" value='@Request.QueryString["BusinessName"]' />
+        <input type="text" id="txtIP" placeholder="IP查询" class="input-sm" value='@Request.QueryString["IP"]' />
+        <input type="text" id="txtDescription" placeholder="详情查询" class="input-sm" value='@Request.QueryString["Description"]' />
+        <input id="dtStart" name="dtStart" type="text" style="width: 130px" placeholder="选起始日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'dtEnd\')}'})" value="@DateTime.Now.AddDays(-6).ToString("yyyy-MM-dd 00:00:00")" class="input-sm" />
+        -
+        <input id="dtEnd" name="dtEnd" type="text" style="width: 130px" placeholder="选结束日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'dtStart\')}'})" value="@DateTime.Now.ToString("yyyy-MM-dd 23:59:59")" class="input-sm" />
+    </span>
+
+    <span class="span2">
+        <label class="pull-right inline">
+            <a class="btn btn-sm btn-success" id="btnSearch"><i class="icon-search bigger-110"></i>搜索</a>
+        </label>
+    </span>
+</div>
+
+<div class="no-margin">
+    <table class="table col-md-12">
+        <thead>
+            <tr>
+                <th class="col1"><a href="javascript:void(0);" title="单击排序" class="btn-sort-order " sort-expression="LoginName">帐号</a></th>
+                <th class="col2"><a href="javascript:void(0);" title="单击排序" class="btn-sort-order " sort-expression="Type">操作类型</a></th>
+                <th class="col3"><a href="javascript:void(0);" title="单击排序" class="btn-sort-order " sort-expression="BusinessName">业务名称</a></th>
+                <th class="col4"><a href="javascript:void(0);" title="单击排序" class="btn-sort-order " sort-expression="Ip">IP</a></th>
+                <th class="col5"><a href="javascript:void(0);">详情</a></th>
+                <th class="col6"><a href="javascript:void(0);" title="单击排序" class="btn-sort-order " sort-expression="CreateTime">创建时间</a></th>
+            </tr>
+        </thead>
+        <tbody class="content"></tbody>
+    </table>
+</div>
+
+@Html.RenderPagination() @*绘制分页*@

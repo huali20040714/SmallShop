@@ -1,0 +1,51 @@
+﻿@model List<UserInfo>
+@{
+    if (Model == null || Model.Count == 0)
+    {
+        <tr><td colspan='100' class='nodata'>没有数据</td></tr>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.LoginName </td>
+                <td>@item.Balance.ToDecimalString()<br />@item.Tel</td>
+                <td class="text-center">@Html.RenderBitText(item.IsLocked)</td>
+                <td class='text-center'>@item.CreateTime.ToDateTime() </td>
+                <td class="text-center">@item.AvailableTime.ToDateTime() </td>
+                <td class="text-center">@item.XiMaJieSuanTime.ToDateTime() </td>
+                <td class="text-center">
+                    @item.CsType.ToString("F")
+                    <br />
+                    @if (item.CsType == CsType.奖励返佣)
+                    {
+                        <span>(@Html.RenderBitText(!item.CsTypeExtParams, "给", "不给"))</span>
+                    }
+                </td>
+                <td class="text-center">
+                    @item.XiMaType.ToString("F")
+                    <br />
+                    @if (item.XiMaType == XiMaType.指标洗码)
+                    {
+                        <span>(@Html.RenderBitText(!item.XiMaTypeExtParams, "给", "不给"))</span>
+                    }
+                </td>
+                <td>@(item.XiMaType == XiMaType.指标洗码 ? "-" : (item.XiMaLv + "")) </td>
+                <td>
+                    <div class="btn-group">
+                        <a class='btn-sm @(item.IsLocked ? "btn-success" : "btn-danger")' href="javascript:void(0);" onclick="changeUserLockStatus(@item.Id, @(item.IsLocked ? 0 : 1))">@(item.IsLocked ? "启用" : "锁定")</a>
+                        <a class="btn-sm btn-info" href="javascript:void(0);" onclick="memberEditor(this,@item.Id,'@UserType.会员帐号.GetHashCode()')">编辑</a>
+                        <a class="btn-sm btn-info" href="javascript:void(0);" onclick="changePassword(@item.Id)">修改密码</a>
+                        <a class="btn-sm btn-info" href="javascript:void(0);" onclick="userLimitMoneyEditor(@item.Id)">限红设置</a>
+                        <a class="btn-sm btn-info" href="javascript:void(0);" onclick="userExtraPeiLvEditor(this,@item.Id)">额外打水率</a>
+                        <br />
+                        <a class="btn-sm btn-info" href="javascript:void(0);" onclick="userDepositAmount(@item.Id)">充值</a>
+                        <a class="btn-sm btn-info" href="javascript:void(0);" onclick="userWithDrawAmount(@item.Id)">提现</a>
+                        <a class="btn-sm btn-info" href="javascript:void(0);" onclick="jieSuanXimaDialog(@item.Id)">结算洗码</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    }
+}

@@ -1,0 +1,35 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, user-scalable=0s" />
+    <!-- 是否启用 WebApp 全屏模式 -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <title>金融贵宾会</title>
+    <link href="assets.1.0.1/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="casinoContainer">
+        <!--视频播放器-->
+        <div id="videoContainer"></div>
+        <div id="cgame"></div>
+    </div>
+
+    <script src="assets.1.0.1/scripts/browserValidate.js"></script>
+    <script src="assets.1.0.1/scripts/jquery-1.11.1.min.js"></script>
+    <script src="build/js/game-2406078dca.js"></script>
+
+    <!--只能最后加载，因为里面需要使用到【】states.reg.user】js对象-->
+    <script src="/App/LoadConfig" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+﻿@model List<UserInfo>
+@{
+    if (Model == null || Model.Count == 0)
+    {
+        <tr><td colspan='100' class='nodata'>没有数据</td></tr>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.Type == UserType.代理商 && SmallShop.BackStage.Business.User.Current.HasPermission(PermissionType.用户管理_代理管理))
+                    {
+                        <a href="/Home/Agent?parentId=@item.Id">@item.LoginName</a>
+                    }
+                    else if (item.Type == UserType.会员帐号 && SmallShop.BackStage.Business.User.Current.HasPermission(PermissionType.用户管理_会员管理))
+                    {
+                        <a href="/Home/Member?@string.Format("AgentId={0}&LoginName={1}",item.ParentId,Html.AttributeEncode(item.LoginName))">@item.LoginName</a>
+                    }
+                    else if (item.Type == UserType.代理子帐号 && SmallShop.BackStage.Business.User.Current.User.Type.HasAnyFlag(UserType.代理商, UserType.代理子帐号) && SmallShop.BackStage.Business.User.Current.HasPermission(PermissionType.用户管理_子帐号管理))
+                    {
+                        <a href="/Home/SubAccount?@string.Format("LoginName={0}",Html.AttributeEncode(item.LoginName))">@item.LoginName</a>
+                    }
+                    else if (item.Type == UserType.管理子帐号 && SmallShop.BackStage.Business.User.Current.User.Type.HasAnyFlag(UserType.后台管理, UserType.管理子帐号) && SmallShop.BackStage.Business.User.Current.HasPermission(PermissionType.用户管理_子帐号管理))
+                    {
+                        <a href="/Home/SubAccount?@string.Format("LoginName={0}",Html.AttributeEncode(item.LoginName))">@item.LoginName</a>
+                    }
+                    else
+                    {
+                        <span>@item.LoginName</span>
+                    }
+                    <font color="gray">(@item.Depth)</font> <br />
+                    @item.Tel
+                </td>
+                <td>
+                    @item.Type<br />
+                    @item.Balance.ToDecimalString()
+                </td>
+                <td>
+                    @if ((int)item.GamePattern == 0)
+                    {
+                        @:-
+                    }
+                    else
+                    {
+                        @item.GamePattern.ToString("F")
+                    }
+                    <br />
+                    @Html.RenderBitText(@item.IsLocked)
+                </td>
+                <td>
+                    @item.AvailableTime.ToDateTime()<br />
+                    @Html.Raw(item.AvailableTime.ToDays())
+                </td>
+                <td>
+                    @item.CreateTime.ToDateTime()<br />
+                    @item.XiMaJieSuanTime.ToDateTime()
+                </td>
+                <td>
+                    @{
+                        if (item.CsType == CsType.奖励返佣)
+                        {
+                            <span>
+                                奖励返佣
+                                @if (item.Type == UserType.会员帐号)
+                                {
+                                    if (item.CsTypeExtParams)
+                                    {
+                                        @Html.Raw("(<span style='color:red;'>给</span>)")
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("奖励返佣(<span style='color:green;'>不给</span>)")
+                                    }
+                                }
+                            </span>
+                        }
+                        else
+                        {
+                            @item.CsType.ToString("F")
+                        }
+                    }<br />
+                    @(item.CsType == CsType.奖励返佣 ? "-" : (item.Cs + ""))
+                </td>
+                <td>
+                    @item.XiMaType
+                    <br />
+                    @if (item.XiMaType == XiMaType.指标洗码)
+                    {
+                        <span>(@Html.RenderBitText(!item.XiMaTypeExtParams, "给", "不给"))</span>
+                    }
+                    else
+                    {
+                        <span>(@item.XiMaLv)</span>
+                    }
+                </td>
+                <td>
+                    <a class="btn-sm btn-info" href="javascript:void(0);" onclick="changePassword(@item.Id)">修改密码</a>
+                    <a class='btn-sm @(item.IsLocked ? "btn-success" : "btn-danger")' href="javascript:void(0);" onclick="changeUserLockStatus(@item.Id, @(item.IsLocked ? 0 : 1))">@(item.IsLocked ? "启用" : "锁定")</a>
+                    <br />
+                    @if (item.Type.HasFlag(UserType.会员帐号) && (SmallShop.BackStage.Business.User.Current.HasPermission(PermissionType.用户管理_代理管理) || SmallShop.BackStage.Business.User.Current.HasPermission(PermissionType.用户管理_会员管理)))
+                    {
+                        <a class="btn-sm btn-info" href="javascript:void(0);" onclick="userExtraPeiLvTreeView(this,@item.Id)">查看额外打水率</a>
+                    }
+                    @if (item.Type.HasFlag(UserType.代理商) && SmallShop.BackStage.Business.User.Current.HasPermission(PermissionType.用户管理_设置现金网接口))
+                    {
+                        <a class="btn-sm btn-info" href="javascript:void(0);" onclick="showPartnerIdAndKey(@item.Id)">PID和Key</a>
+                    }
+                </td>
+            </tr>
+                            }
+                        }
+}

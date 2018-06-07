@@ -1,0 +1,47 @@
+﻿@section HeaderContent{
+    @Scripts.Render("~/Views/System/ExceptionLog.cshtml.js?v=" + StringUtil.Version)
+}
+@Html.RenderPaginationHiddenInput()  @*绘制分页和排序使用到的隐藏变量*@
+<style>
+    .col1, .col3, .col5, .col6 { max-width: 150px; min-width: 100px; }
+    .col2, .col4 { width: auto; }
+</style>
+
+<div class="row-fluid header">
+    <span class="span10">
+        <select id="ddlVague" class="input-sm">
+            <option value="0">精确</option>
+            <option value="1">模糊</option>
+        </select>
+        <input type="text" id="txtLoginName" placeholder="帐号查询" class="input-sm" value='@Request.QueryString["LoginName"]' />
+        <input type="text" id="txtUrl" placeholder="网址查询" class="input-sm" value='@Request.QueryString["Url"]' />
+        <input type="text" id="txtIP" placeholder="IP查询" class="input-sm" value='@Request.QueryString["IP"]' />
+        <input type="text" id="txtMessage" placeholder="异常查询" class="input-sm" value='@Request.QueryString["Message"]' />
+        <input id="dtStart" name="dtStart" type="text" style="width: 130px" placeholder="选起始日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'dtEnd\')}'})" value="@DateTime.Now.AddDays(-6).ToString("yyyy-MM-dd 00:00:00")" class="input-sm" />
+        -
+        <input id="dtEnd" name="dtEnd" type="text" style="width: 130px" placeholder="选结束日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'dtStart\')}'})" value="@DateTime.Now.ToString("yyyy-MM-dd 23:59:59")" class="input-sm" />
+    </span>
+    <span class="span2">
+        <label class="pull-right inline">
+            <a class="btn btn-sm btn-success" id="btnSearch"><i class="icon-search bigger-110"></i>搜索</a>
+        </label>
+    </span>
+</div>
+
+<div class="no-margin">
+    <table class="table col-md-12">
+        <thead>
+            <tr>
+                <th class="col1"><a href="javascript:void(0);" title="单击排序" class="btn-sort-order " sort-expression="LoginName">帐号</a></th>
+                <th class="col2"><a href="javascript:void(0);" title="单击排序" class="btn-sort-order " sort-expression="Url">网址</a></th>
+                <th class="col3"><a href="javascript:void(0);" title="单击排序" class="btn-sort-order " sort-expression="Ip">IP</a></th>
+                <th class="col4"><a href="javascript:void(0);">异常</a></th>
+                <th class="col5"><a href="javascript:void(0);" title="单击排序" class="btn-sort-order " sort-expression="CreateTime">发生时间</a></th>
+                <th class="col6"><a href="javascript:void(0);">操作</a></th>
+            </tr>
+        </thead>
+        <tbody class="content"></tbody>
+    </table>
+</div>
+
+@Html.RenderPagination() @*绘制分页*@

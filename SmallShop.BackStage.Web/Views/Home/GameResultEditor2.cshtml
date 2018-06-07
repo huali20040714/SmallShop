@@ -1,0 +1,23 @@
+﻿@model GameResultInfo
+<table class="table resulttable">
+    <tr>
+        <td class="text-left">
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,2)" data-value="1">龙</button>
+        </td>
+        <td class="text-center">
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,2)" data-value="3">和</button>
+        </td>
+        <td class="text-right">
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,2)" data-value="2">虎</button>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-left">
+        </td>
+        <td class="text-center">
+            <img id="imgResult" src="@string.Format("/Assets/images/gameresult/longhu/{0}.png", Model.Result)" />
+        </td>
+        <td class="text-right">
+        </td>
+    </tr>
+</table>

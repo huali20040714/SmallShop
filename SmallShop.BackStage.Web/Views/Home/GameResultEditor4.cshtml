@@ -1,0 +1,177 @@
+﻿@model GameResultInfo
+<table class="table resulttable">
+    <tr data-row="0">
+        <td>
+            庄家
+        </td>
+        <td>
+            <span class="result0"></span>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,0)" data-value="1">平倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,0)" data-value="2">翻倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,0)" data-value="3">牛牛</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,0)" data-value="4">四炸</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,0)" data-value="5">五花</button>
+        </td>
+        <td>
+            &nbsp;
+        </td>
+        <td>
+            &nbsp;
+        </td>
+    </tr>
+    <tr data-row="1">
+        <td>
+            一号位
+        </td>
+        <td>
+            <span class="result1"></span>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,1)" data-value="1">平倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,1)" data-value="2">翻倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,1)" data-value="3">牛牛</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,1)" data-value="4">四炸</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,1)" data-value="5">五花</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,1)" data-value="6">输</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,1)" data-value="7">平有牛</button>
+        </td>
+    </tr>
+    <tr data-row="2">
+        <td>
+            二号位
+        </td>
+        <td>
+            <span class="result2"></span>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,2)" data-value="1">平倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,2)" data-value="2">翻倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,2)" data-value="3">牛牛</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,2)" data-value="4">四炸</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,2)" data-value="5">五花</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,2)" data-value="6">输</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,2)" data-value="7">平有牛</button>
+        </td>
+    </tr>
+    <tr data-row="3">
+        <td>
+            三号位
+        </td>
+        <td>
+            <span class="result3"></span>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,3)" data-value="1">平倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,3)" data-value="2">翻倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,3)" data-value="3">牛牛</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,3)" data-value="4">四炸</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,3)" data-value="5">五花</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,3)" data-value="6">输</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,3)" data-value="7">平有牛</button>
+        </td>
+    </tr>
+    <tr data-row="4">
+        <td>
+            四号位
+        </td>
+        <td>
+            <span class="result4"></span>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,4)" data-value="1">平倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,4)" data-value="2">翻倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,4)" data-value="3">牛牛</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,4)" data-value="4">四炸</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,4)" data-value="5">五花</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,4)" data-value="6">输</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,4)" data-value="7">平有牛</button>
+        </td>
+    </tr>
+    <tr data-row="5">
+        <td>
+            五号位
+        </td>
+        <td>
+            <span class="result5"></span>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,5)" data-value="1">平倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,5)" data-value="2">翻倍</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,5)" data-value="3">牛牛</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,5)" data-value="4">四炸</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,5)" data-value="5">五花</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,5)" data-value="6">输</button>
+        </td>
+        <td>
+            <button class="btn-lg btn-primary" type="button" onclick="changeResult(this,4,5)" data-value="7">平有牛</button>
+        </td>
+    </tr>
+</table>

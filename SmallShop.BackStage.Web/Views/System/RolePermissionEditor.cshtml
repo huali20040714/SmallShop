@@ -1,0 +1,17 @@
+﻿@section HeaderContent{
+    @Scripts.Render("~/Views/System/RolePermissionEditor.cshtml.js?v=" + StringUtil.Version)
+    <style>
+        #RoleId { width: 160px; }
+    </style>
+}
+@model RolePermissionEditorModel
+
+<div class="row-fluid header">
+    <span class="span12">
+        <label class="inline">
+            权限设置：            @Html.SelectEditor(Model.Pairs, "RoleId", Model.RoleId, "input-sm")
+            <button type="button" class="btn btn-sm btn-success" onclick="btnSaveClick(this);">保 存<i class="icon-arrow-right icon-on-right bigger-110"></i></button>
+        </label>
+    </span>
+</div>
+<div id="permissionPanel"></div>

@@ -1,0 +1,31 @@
+﻿@model List<RoleInfo>
+@{
+    if (Model == null || Model.Count == 0)
+    {
+        <tr><td colspan='100' class='nodata'>没有数据</td></tr>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@Html.RenderBitText(@item.IsInner, "否", "是")</td>
+                <td>@item.CreateTime.ToDateTime()</td>
+                <td>                    
+                    @{
+                        if (SmallShop.BackStage.Business.User.Current.HasPermission(PermissionType.系统管理_权限设置))
+                        {
+                            <a class="btn-sm btn-info" href="/System/RolePermissionEditor?id=@item.Id">权限设置</a>
+                        }
+                        if (!item.IsInner)
+                        {
+                            <a class="btn-sm btn-info" href="javascript:void(0);" onclick="roleEditor(@item.Id)">编辑</a>
+                            <a class="btn-sm btn-info" href="javascript:void(0);" onclick="roleDelete(@item.Id)">删除</a>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    }
+}

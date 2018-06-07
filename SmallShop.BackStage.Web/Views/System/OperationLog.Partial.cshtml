@@ -1,0 +1,21 @@
+﻿@model List<OperationLogInfo>
+@{
+    if (Model == null || Model.Count == 0)
+    {
+        <tr><td colspan='100' class='nodata'>没有数据</td></tr>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.LoginName</td>
+                <td>@item.Type</td>
+                <td>@item.BusinessName</td>
+                <td>@item.Ip</td>
+                <td class="wordbreakall">@item.Description</td>
+                <td>@item.CreateTime.ToDateTime()</td>
+            </tr>
+        }
+    }
+}

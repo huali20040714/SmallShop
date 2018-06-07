@@ -1,0 +1,23 @@
+﻿@model UserQueryModel
+<tr>
+    <td>@Model.CurrentUser.LoginName </td>
+    <td>@Model.CurrentUser.Balance.ToDecimalString()<br />@Model.CurrentUser.Tel</td>
+    <td class="text-center">@Html.RenderBitText(Model.CurrentUser.IsLocked) </td>
+    <td class='text-center'>@Model.CurrentUser.CreateTime.ToDateTime() </td>
+    <td class="text-center">@Model.CurrentUser.AvailableTime.ToDateTime() </td>
+    <td class="text-center">@Model.CurrentUser.XiMaJieSuanTime.ToDateTime() </td>
+    <td class="text-center">@Model.CurrentUser.CsType.ToString("F") </td>
+    <td>@(Model.CurrentUser.CsType == CsType.奖励返佣 ? "-" : (Model.CurrentUser.Cs + "")) </td>
+    <td class="text-center">
+        @Model.CurrentUser.XiMaType.ToString()
+        <br />
+        @if (Model.CurrentUser.XiMaType == XiMaType.指标洗码)
+        {
+            <span>(@Html.RenderBitText(!Model.CurrentUser.XiMaTypeExtParams, "给", "不给"))</span>
+        }
+    </td>
+    <td>@(Model.CurrentUser.XiMaType == XiMaType.指标洗码 ? "-" : (Model.CurrentUser.XiMaLv + ""))</td>
+    <td>
+        @Html.ActionLink("其代理", "Agent", "Home", new { parentId = Model.CurrentUser.Id }, new { @class = "btn-sm btn-info" })
+    </td>
+</tr>

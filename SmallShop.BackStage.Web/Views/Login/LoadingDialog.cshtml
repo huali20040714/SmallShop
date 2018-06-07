@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Shared/_Dialog.cshtml";
+}
+<style type="text/css">
+    div.loadmask { background-color: #fff; }
+    div.loadmask-msg { top: calc(50% - 18px); top: -webkit-calc(50% - 18px); top: -moz-calc(50% - 18px); left: calc(50% - 38px); left: -webkit-calc(50% - 38px); left: -moz-calc(50% - 38px); }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        ETrip.Util.showLoading();
+        $('.loadmask-msg').removeAttr('style');
+    });
+</script>

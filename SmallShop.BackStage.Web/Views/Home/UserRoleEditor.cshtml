@@ -1,0 +1,56 @@
+﻿@{
+    Layout = "~/Views/Shared/_Dialog.cshtml";
+}
+@section HeaderContent{
+    @Scripts.Render("~/Views/Home/UserRoleEditor.cshtml.js?v=" + StringUtil.Version)
+}
+@model UserRoleEditorModel
+
+<form action="/Home/SaveUserRole" method="post" id="mainForm">
+    <input type="hidden" name="UserId" value="@Model.UserId" />
+    <table class="table top-noborder">
+        <thead>
+            <tr>
+                <td>
+                    <input class="ace RoleId-all" type="checkbox" />
+                    <span class="lbl">全选</span>
+                </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-right align-middle">
+                    <button type="button" class="btn btn-sm btn-success" onclick="btnSaveClick(this);">保 存<i class="icon-arrow-right icon-on-right bigger-110"></i></button>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @for (var i = 0; i < Model.Roles.Count; i++)
+                {
+                    var item = Model.Roles[i];
+                    if (Model.RoleUser.Any(child => child.RoleId == item.Id))
+                    {
+                        <td>
+                            <label>
+                                <input class="ace" type="checkbox" name="RoleId" checked="checked" value="@item.Id" />
+                                <span class="lbl">@item.Name</span>
+                            </label>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <label>
+                                <input class="ace" type="checkbox" name="RoleId" value="@item.Id" />
+                                <span class="lbl">@item.Name</span>
+                            </label>
+                        </td>
+                    }
+                    if ((i + 1) % 4 == 0 && i!=Model.Roles.Count)
+                    {
+                        @Html.Raw("</tr><tr>")
+                    }
+                }
+            </tr>
+        </tbody>
+    </table>
+</form>

@@ -1,0 +1,44 @@
+﻿@section HeaderContent{
+    @Scripts.Render("~/Views/Home/GameResult.cshtml.js?v=" + StringUtil.Version)    
+}
+@Html.RenderPaginationHiddenInput()  @*绘制分页和排序使用到的隐藏变量*@
+
+<div class="row-fluid header">
+    <span class="span10">
+        <select id="ddlVague" class="input-sm">
+            <option value="0">精确</option>
+            <option value="1">模糊</option>
+        </select>
+        @Html.Select(typeof(GameType), "ddlGameType", true, "-1", "所有游戏类型", "input-sm")
+        <input id="GameDeskName" type="text" placeholder="桌号查询" class="input-sm" />
+        <input id="Chang" type="text" placeholder="场查询" class="input-sm" />
+        <input id="Ci" type="text" placeholder="次查询" class="input-sm" />
+        <input id="dtStart" name="dtStart" type="text" style="width: 130px" placeholder="选起始日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'dtEnd\')}'})" value="" class="input-sm" />
+        -
+        <input id="dtEnd" name="dtEnd" type="text" style="width: 130px" placeholder="选结束日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'dtStart\')}'})" value="" class="input-sm" />
+    </span>
+    <span class="span2">
+        <label class="pull-right inline">
+            <a class="btn btn-sm btn-success" id="btnSearch"><i class="icon-search bigger-110"></i>搜索</a>
+        </label>
+    </span>
+</div>
+
+<div class="no-margin">
+    <table class="table col-md-12">
+        <thead>
+            <tr>
+                @Html.RenderTh("桌号", "GameDeskName")
+                @Html.RenderTh("游戏", GameResultCols.GameType)
+                @Html.RenderTh("场", GameResultCols.Chang)
+                @Html.RenderTh("次", GameResultCols.Ci)
+                @Html.RenderTh("结果", GameResultCols.Result)
+                @Html.RenderTh("时间", GameResultCols.CreateTime)
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody class="content"></tbody>
+    </table>
+</div>
+
+@Html.RenderPagination() @*绘制分页*@

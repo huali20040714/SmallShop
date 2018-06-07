@@ -1,0 +1,130 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登陆管理</title>
+    <meta name="title" content="" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+
+    <!-- basic styles -->
+    @Styles.Render("~/assets/css/bootstrap.min.css")
+    @Styles.Render("~/assets/css/font-awesome.min.css")
+    <!-- page specific plugin styles -->
+    @Styles.Render("~/assets/css/jquery-ui-1.10.3.full.min.css")
+    <!-- ace styles -->
+    @Styles.Render("~/assets/css/ace.min.css")
+    @Styles.Render("~/assets/css/ace-rtl.min.css")
+    @Styles.Render("~/assets/css/ace-skins.min.css")
+    @Styles.Render("~/Views/Login/assets/transfebg/supersized.css")
+    @Styles.Render("~/Views/Login/Login.cshtml.css")
+
+    <link href="favicon.ico" mce_href="favicon.ico" rel="bookmark" type="image/x-icon" />
+    <link href="favicon.ico" mce_href="favicon.ico" rel="icon" type="image/x-icon" />
+    <link href="favicon.ico" mce_href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+</head>
+
+<body style="background-color:#f8f8f8;">
+    <div class="login-basic-box">        
+        <div class="login-layout" style="background-color: transparent;">
+            <div class="main-container">
+                <div class="main-content">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="login-container">
+                                <div class="center">
+                                    <h2>
+                                        <span class="red"></span>
+                                        <span class="white">后台登陆管理</span>
+                                    </h2>
+                                    <h4 class="blue"></h4>
+                                </div>
+                                <div class="space-6"></div>
+                                <div class="position-relative">
+                                    <div id="login-box" class="login-box visible widget-box no-border">
+                                        <div class="widget-body">
+                                            <div class="widget-main">
+                                                <h4 class="header blue lighter bigger">
+                                                    <i style="background: url(/Content/logo/logo.png) no-repeat; display: inline-block; width: 16px; height: 16px; background-size:16px 16px;"></i>
+                                                    请输入帐号和密码登录
+                                                </h4>
+                                                <div class="space-6"></div>
+                                                <div class="tips accounttips" style="display: none;">
+                                                    <b>!</b>
+                                                    <span class="message">请输入帐号和密码登录</span>
+                                                    <div class="triangle"></div>
+                                                </div>
+
+                                                <form id="login-form">
+                                                    <fieldset>
+                                                        <label class="block clearfix">
+                                                            <span class="block input-icon input-icon-left">
+                                                                <input id="loginName" type="text" value="@ViewBag.LoginName" class="form-control" placeholder="输入帐号" />
+                                                                <i class="icon-user"></i>
+                                                            </span>
+                                                        </label>
+
+                                                        <label class="block clearfix">
+                                                            <span class="block input-icon input-icon-left">
+                                                                <input id="password" type="password" value="@ViewBag.Password" class="form-control" placeholder="输入登录密码" />
+                                                                <i class="icon-lock"></i>
+                                                            </span>
+                                                        </label>
+
+                                                        <div class="space"></div>
+                                                        <label class="block clearfix">
+                                                            <input type="text" id="verifyCode" value="@ViewBag.VerifyCode" maxlength="4" placeholder="" style="width:70px; height:34px; text-align:center;" />
+                                                            <img src="/Login/VerifyCodeImage?rnd=@Environment.TickCount" id="verifyCodeImage" style="width:70px; height:34px;  cursor:pointer; margin-top:-2px; " onclick="btnChangeVerifyCodeClick()" alt="刷新" />
+                                                            <button type="button" id="btnLogin" onclick="btnLoginClick(this);" class="width-35 pull-right btn btn-sm btn-primary">
+                                                                <i class="icon-user"></i>
+                                                                登录
+                                                            </button>
+                                                        </label>
+
+                                                        <div class="space-4"></div>
+                                                    </fieldset>
+                                                </form>
+                                            </div><!-- /widget-main -->
+
+                                            <div class="toolbar clearfix">
+                                                <div>
+                                                    <i class="icon-arrow-left"></i>
+                                                    &copy;技术支持
+                                                </div>
+
+                                                <div>
+                                                    技术电话
+                                                    <i class="icon-arrow-right"></i>
+                                                </div>
+                                            </div>
+                                        </div><!-- /widget-body -->
+                                    </div><!-- /login-box -->
+                                </div><!-- /position-relative -->
+
+                            </div>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div>
+            </div><!-- /.main-container -->
+        </div>
+    </div>
+    <div class='dialog' id='dialog-html' style="display: none"></div>
+
+    @Scripts.Render("~/assets/js/jquery-1.11.1.min.js?v=" + StringUtil.Version)
+    <script type="text/javascript">if ("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");</script>
+    @Scripts.Render("~/assets/js/jquery.nicescroll.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/jquery-ui.1.11.3.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/Util.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/ace-extra.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/Views/Login/assets/transfebg/supersized.3.2.7.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/Views/Login//assets/transfebg/supersized-init.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/Views/Login/Login.cshtml.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/Views/Login/Login.Check.cshtml.js?v=" + StringUtil.Version)
+</body>
+</html>

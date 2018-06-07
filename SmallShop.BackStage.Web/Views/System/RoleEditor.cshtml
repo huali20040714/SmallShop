@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/_Dialog.cshtml";
+}
+@section HeaderContent{
+    @Scripts.Render("~/Views/System/RoleEditor.cshtml.js?v=" + StringUtil.Version)
+}
+@model RoleInfo
+
+<form action="/System/SaveRoleEditor" method="post" id="mainForm">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <table class="table top-noborder">
+        @Html.RenderEditTd("名称", RoleCols.Name.ToString(), Model.Name, true)
+        <tr>
+            <td colspan="2" class="text-center align-middle">
+                <button type="button" class="btn btn-sm btn-success" onclick="btnSaveClick(this);">保 存<i class="icon-arrow-right icon-on-right bigger-110"></i></button>
+            </td>
+        </tr>
+    </table>
+</form>

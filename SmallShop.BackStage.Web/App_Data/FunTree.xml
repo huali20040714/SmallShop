@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<FunTree xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <SubNodes>
+        <FunNode>
+            <ClassName>icon-dashboard</ClassName>
+            <Menu>Index</Menu>
+            <Url>/Home/Index</Url>
+            <Title>用户首页</Title>
+            <Permissions>控制台_用户首页</Permissions>
+            <SubNodes />
+        </FunNode>
+        
+        <FunNode>
+            <ClassName>icon-user</ClassName>
+            <Menu />
+            <Url />
+            <Title>用户管理</Title>
+            <Permissions>用户管理</Permissions>
+            <SubNodes>
+                <FunNode>
+                    <ClassName>icon-double-angle-right</ClassName>
+                    <Menu>User</Menu>
+                    <Url>/Home/User</Url>
+                    <Title>用户管理</Title>
+                    <Permissions>用户管理_用户管理</Permissions>
+                    <SubNodes />
+                </FunNode>
+                <FunNode>
+                    <ClassName>icon-double-angle-right</ClassName>
+                    <Menu>Member</Menu>
+                    <Url>/Home/Member</Url>
+                    <Title>会员管理</Title>
+                    <Permissions>用户管理_会员管理</Permissions>
+                    <SubNodes />
+                </FunNode>
+                <FunNode>
+                    <ClassName>icon-double-angle-right</ClassName>
+                    <Menu>SubAccount</Menu>
+                    <Url>/Home/SubAccount</Url>
+                    <Title>子帐号管理</Title>
+                    <Permissions>用户管理_子帐号管理</Permissions>
+                    <SubNodes />
+                </FunNode>
+            </SubNodes>
+        </FunNode>
+
+        <FunNode>
+            <ClassName>icon-cog</ClassName>
+            <Menu />
+            <Url />
+            <Title>系统管理</Title>
+            <Permissions>系统管理</Permissions>
+            <SubNodes>
+                <FunNode>
+                    <ClassName>icon-double-angle-right</ClassName>
+                    <Menu>Role</Menu>
+                    <Url>/System/Role</Url>
+                    <Title>角色管理</Title>
+                    <Permissions>系统管理_角色管理</Permissions>
+                    <SubNodes />
+                </FunNode>
+                <FunNode>
+                    <ClassName>icon-double-angle-right</ClassName>
+                    <Menu>RolePermissionEditor</Menu>
+                    <Url>/System/RolePermissionEditor</Url>
+                    <Title>权限设置</Title>
+                    <Permissions>系统管理_权限设置</Permissions>
+                    <SubNodes />
+                </FunNode>
+                <FunNode>
+                    <ClassName>icon-double-angle-right</ClassName>
+                    <Menu>OperationLog</Menu>
+                    <Url>/System/OperationLog</Url>
+                    <Title>操作日志</Title>
+                    <Permissions>系统管理_操作日志</Permissions>
+                    <SubNodes />
+                </FunNode>
+                <FunNode>
+                    <ClassName>icon-double-angle-right</ClassName>
+                    <Menu>ExceptionLog</Menu>
+                    <Url>/System/ExceptionLog</Url>
+                    <Title>异常日志</Title>
+                    <Permissions>系统管理_异常日志</Permissions>
+                    <SubNodes />
+                </FunNode>
+            </SubNodes>
+        </FunNode>
+
+    </SubNodes>
+</FunTree>

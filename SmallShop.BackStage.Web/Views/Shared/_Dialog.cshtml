@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html style="background-color:white;">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- basic styles -->
+    @Styles.Render("~/assets/css/bootstrap.min.css")
+    @Styles.Render("~/assets/css/font-awesome.min.css")
+    <!-- page specific plugin styles -->
+    @Styles.Render("~/assets/css/jquery-ui-1.10.3.full.min.css")
+    <!-- ace styles -->
+    @Styles.Render("~/assets/css/ace.min.css")
+    @Styles.Render("~/assets/css/ace-rtl.min.css")
+    @Styles.Render("~/assets/css/ace-skins.min.css")
+
+    <!-- inline styles related to this page -->
+    <!-- ace settings handler -->
+    @Scripts.Render("~/assets/js/json2.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/ace-extra.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/jquery-1.11.1.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/bootstrap.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/typeahead-bs2.min.js?v=" + StringUtil.Version)
+    <!-- page specific plugin scripts -->
+    <!-- ace scripts -->
+    @Scripts.Render("~/assets/js/ace-elements.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/ace.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/jquery-ui.1.11.3.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/jquery.ui.touch-punch.min.js?v=" + StringUtil.Version)
+
+    <!-- old scripts -->
+    @Scripts.Render("~/assets/js/Util.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/jquery.form.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/Pager/Pager.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/Loadmask/jquery.loadmask.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/Sticky/sticky.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/My97DatePicker/WdatePicker.js?v=" + StringUtil.Version)
+    @RenderSection("HeaderContent", false)
+</head>
+<body style="overflow: hidden;">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</body>
+</html>

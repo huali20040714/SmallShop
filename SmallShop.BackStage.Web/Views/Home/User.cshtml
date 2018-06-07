@@ -1,0 +1,63 @@
+﻿@section HeaderContent{
+    @Scripts.Render("~/Views/Home/User.cshtml.js?v=" + StringUtil.Version)
+    <style>
+        #ddlOperationType { width: 120px; }
+    </style>
+}
+@Html.RenderPaginationHiddenInput()  @*绘制分页和排序使用到的隐藏变量*@
+
+<div class="row-fluid header">
+    <span class="span8">
+        <a class="btn btn-sm btn-success" id="agentList" href="javascript:void(0)" onclick="openJstreeAgent()">
+            <i class="icon-filter bigger-110"></i>选择代理商
+        </a>
+        <select id="ddlVague" class="input-sm">
+            <option value="0">精确</option>
+            <option value="1">模糊</option>
+        </select>
+        @Html.Select(typeof(UserType), "ddlUserType", true, "-1", "所有类型", "input-sm")
+        @Html.Select(typeof(LockedType), "ddlIsLocked", true, "-1", "所有状态", "input-sm")
+        <input type='hidden' id='hdfParentId' value='@SmallShop.BackStage.Business.User.Current.User.Id' />
+        <input type="text" id="txtLoginName" placeholder="帐号查询" class="input-sm" />
+        <input id="txtTel" placeholder="电话号码查询" type="text" class="input-sm" />
+        <select id="ddlIsPartner" class="input-sm">
+            <option value="0">所有帐号</option>
+            <option value="1">合作者帐号</option>
+            <option value="2">其它帐号</option>
+        </select>
+        <input id="txtPartnerId" placeholder="合作者Id查询" type="text" class="input-sm" />
+        <select id="ddlDateType" class="input-sm">
+            <option value="CreateTime">创建时间</option>
+            <option value="AvailableTime">有效期</option>
+            <option value="XiMaJieSuanTime">洗码费结算时间</option>
+        </select>
+        <input id="dtStart" name="dtStart" type="text" style="width: 130px" placeholder="选起始日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'dtEnd\')}'})" value="" class="input-sm" />
+        -
+        <input id="dtEnd" name="dtEnd" type="text" style="width: 130px" placeholder="选结束日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'dtStart\')}'})" value="" class="input-sm" />
+    </span>
+    <span class="span2">
+        <label class="pull-right inline">
+            <a class="btn btn-sm btn-success" id="btnSearch"><i class="icon-search bigger-110"></i>搜索</a>
+        </label>
+    </span>
+</div>
+
+<div class="no-margin">
+    <table class="table col-md-12">
+        <thead>
+            <tr>
+                <th>帐号/电话</th>
+                <th>类型/余额</th>
+                <th>游戏玩法/状态</th>
+                @Html.RenderTh("有效期", UserCols.AvailableTime)
+                <th>创建时间/洗码费结算时间</th>
+                <th>占成类型/占成(%)</th>
+                <th>洗码方式/洗码率(%)</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody class="content"></tbody>
+    </table>
+</div>
+
+@Html.RenderPagination() @*绘制分页*@

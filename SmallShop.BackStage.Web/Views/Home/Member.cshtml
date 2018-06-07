@@ -1,0 +1,88 @@
+﻿@section HeaderContent{
+    @Scripts.Render("~/Views/Home/Member.cshtml.js?v=" + StringUtil.Version)
+    <style>
+        #ddlOperationType { width: 120px; }
+    </style>
+}
+@Html.RenderPaginationHiddenInput()  @*绘制分页和排序使用到的隐藏变量*@
+@model UserFilterModel
+<div class="row-fluid header">
+    <span class="span2">
+        <a class="btn btn-sm btn-success" id="agentList" href="javascript:void(0)" onclick="openJstreeAgent()">
+            <i class="icon-filter bigger-110"></i>选择代理商
+        </a>
+    </span>
+</div>
+
+<div class="no-margin">
+    <table class="table table-bordered table-hover table-striped col-md-12">
+        <thead>
+            <tr>
+                <th>帐号</th>
+                <th>余额/电话</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                <th>有效期</th>
+                <th>洗码费结算时间</th>
+                <th>占成类型</th>
+                <th>占成(%)</th>
+                <th>洗码方式</th>
+                <th>洗码率(%)</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody class="content1"></tbody>
+    </table>
+</div>
+<div style="clear:both;"></div>
+<div class="row-fluid header">
+    <span class="span2">
+        <a id="btn_add" href="javascript:void(0);" class="btn btn-sm btn-info" onclick="memberEditor(this,0,'@UserType.会员帐号.GetHashCode()')"><i class="icon-plus align-center"></i>新增会员</a>
+    </span>
+    <span class="span8">
+        <select id="ddlVague" class="input-sm">
+            <option value="0">精确</option>
+            <option value="1">模糊</option>
+        </select>
+        <input id="hdfRootId" type="hidden" value="@Model.RootId" />
+        <input id="hdfParentId" type="hidden" value="@Model.ParentId" />
+        <input id="hdfIsEndNode" type="hidden" value="@(Model.IsEndNode ? "1" : "0")" />
+        @Html.Select(typeof(LockedType), "ddlIsLocked", true, "-1", "所有状态", "input-sm")
+        <input id="txtLoginName" placeholder="帐号查询" type="text" class="input-sm" value="@WebHelper.Params["LoginName"]" />
+        <input id="txtTel" placeholder="电话号码查询" type="text" class="input-sm" />
+        <select id="ddlDateType" class="input-sm">
+            <option value="CreateTime">创建时间</option>
+            <option value="AvailableTime">有效期</option>
+            <option value="XiMaJieSuanTime">洗码费结算时间</option>
+        </select>
+        <input id="dtStart" name="dtStart" type="text" style="width: 130px" placeholder="选起始日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'dtEnd\')}'})" value="" class="input-sm" />
+        -
+        <input id="dtEnd" name="dtEnd" type="text" style="width: 130px" placeholder="选结束日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'dtStart\')}'})" value="" class="input-sm" />
+    </span>
+    <span class="span2">
+        <label class="pull-right inline">
+            <a class="btn btn-sm btn-success" id="btnSearch"><i class="icon-search bigger-110"></i>搜索</a>
+        </label>
+    </span>
+</div>
+<div class="no-margin">
+    <table class="table table-bordered table-hover table-striped col-md-12">
+        <thead>
+            <tr>
+                @Html.RenderTh("帐号", UserCols.LoginName)
+                @Html.RenderTh("余额/电话", UserCols.Balance)
+                @Html.RenderTh("状态", UserCols.IsLocked)
+                @Html.RenderTh("创建时间", UserCols.CreateTime)
+                @Html.RenderTh("有效期", UserCols.AvailableTime)
+                @Html.RenderTh("洗码费结算时间", UserCols.XiMaJieSuanTime)
+                @Html.RenderTh("占成类型", UserCols.CsType)
+                @Html.RenderTh("洗码方式", UserCols.XiMaType)
+                @Html.RenderTh("洗码率(%)", UserCols.XiMaLv)
+                <th class="col-sm-4">操作</th>
+            </tr>
+        </thead>
+        <tbody class="content2"></tbody>
+    </table>
+</div>
+
+@Html.RenderPagination() @*绘制分页*@

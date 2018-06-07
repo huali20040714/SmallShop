@@ -1,0 +1,24 @@
+﻿@{
+    Layout = null;
+}
+<!doctype html>
+<html lang="zh-cn" class="no-js">
+<head>
+    <meta charset="UTF-8" />
+    <title>后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @Styles.Render("~/Views/Login/assets/style.css")
+    @Scripts.Render("~/assets/js/jquery-1.11.1.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/Views/Login/assets/jquery.particleground.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/Views/Login/assets/login.errorcode.js?v=" + StringUtil.Version)
+</head>
+
+<body>
+    <div id="particles">
+        <div class="intro">
+            <h1>出错啦...</h1>
+            <p>@ViewBag.ErrorMessage</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+﻿@{
+    Layout = "~/Views/Shared/_Dialog.cshtml";
+    var currentUser = SmallShop.BackStage.Business.User.Current.MainUser;
+}
+@section HeaderContent{
+    @Scripts.Render("~/Views/Home/UserEditor.cshtml.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/Assets/js/jquery-ui.1.11.3.min.js?v=" + StringUtil.Version)
+    <style>
+        #Type {
+            width: 160px;
+        }
+
+        input.disabled {
+            background-color: #848484 !important
+        }
+    </style>
+}
+@model UserEditorModel
+
+<form action='/Home/SaveUser' method="post" id="mainForm">
+    <input type="hidden" name="Id" value="@Model.User.Id" />
+    <input type="hidden" name="Type" value="@Model.User.Type" />
+    <table class="table top-noborder">
+        <tr>
+            <td class="text-right align-middle" style="width:100px;">帐号：</td>
+            <td><input type="text" @((Model.User.Id > 0) ? "disabled=\"disabled\"" : "") name="LoginName" value="@Model.User.LoginName" />（<span style="color: red">必填</span>）</td>
+        </tr>
+        @if (Model.User.Id == 0)
+        {
+            <tr>
+                <td class="text-right align-middle">密码：</td>
+                <td><input type="password" name="Password" value="" />（<span style="color: red">必填</span>）</td>
+            </tr>
+        }
+        <tr>
+            <td class="text-right align-middle">电话：</td>
+            <td><input type="text" name="Tel" value="@Model.User.Tel" maxlength="11" /></td>
+        </tr>
+        <tr>
+            <td class="text-right align-middle">游戏玩法：</td>
+            <td>
+                @foreach (var item in Model.GamePatternList)
+                {
+                    <label class="p-short-cell"><input class="ace" name="GamePattern" @string.Format("{0}", Model.User.GamePattern.HasFlag(item) ? "checked='checked'" : "") value="@item.GetHashCode()" type="radio"><span class="lbl"> @item</span></label>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right align-middle">游戏权限：</td>
+            <td>
+                @foreach (var item in Model.GamePermissionList)
+                {
+                    <label class="p-short-cell"><input class="ace" name="GamePermission" @string.Format("{0}", Model.User.GamePermission.HasFlag(item) ? "checked='checked'" : "") value="@item.GetHashCode()" type="checkbox"><span class="lbl"> @item</span></label>
+                }
+            </td>
+        </tr>
+        <tr style="@Model.GetHideStyle(Model.IsHideCsType)">
+            <td class="text-right align-middle">占成类型：</td>
+            <td>
+                @foreach (var item in Model.CsTypeList)
+                {
+                    <label class="p-short-cell"><input class="ace" name="CsType" @string.Format("{0}", Model.User.CsType.HasFlag(item) ? "checked='checked'" : "") value="@item.GetHashCode()" type="radio"><span class="lbl"> @item</span></label>
+                }
+            </td>
+        </tr>
+        <tr id="trCs" style="@Model.GetHideStyle(Model.IsHideCs)">
+            <td class="text-right align-middle">占成：</td>
+            <td><input type="text" name="Cs" value="@Model.User.Cs" maxlength="3" style="width:80px;" />%（可开最大值@(Model.Cs)%）</td>
+        </tr>
+        <tr id="trCsTypeExtParams" style="@Model.GetHideStyle(Model.IsHideCsTypeExtParams)">
+            <td class="text-right align-middle">奖励返佣：</td>
+            <td>
+                <label class="p-short-cell"><input class="ace" type="radio" name="CsTypeExtParams" value="true" @Html.Raw(Model.User.CsTypeExtParams ? "checked='checked'" : "") /><span class="lbl">给会员</span></label>
+                <label class="p-short-cell"><input class="ace" type="radio" name="CsTypeExtParams" value="false" @Html.Raw(Model.User.CsTypeExtParams ? "" : "checked='checked'") /><span class="lbl">不给会员</span></label>
+            </td>
+        </tr>
+
+        <tr style="@Model.GetHideStyle(Model.IsHideXiMaType)">
+            <td class="text-right align-middle">洗码方式：</td>
+            <td>
+                @foreach (var item in Model.XiMaTypeList)
+                {
+                    <label class="p-short-cell"><input class="ace" name="XiMaType" @string.Format("{0}", Model.User.XiMaType.HasFlag(item) ? "checked='checked'" : "") value="@item.GetHashCode()" type="radio"><span class="lbl"> @item</span></label>
+                }
+            </td>
+        </tr>
+        <tr id="trXiMaLv" style="@Model.GetHideStyle(Model.IsHideXiMaLv)">
+            <td class="text-right align-middle">洗码率：</td>
+            <td><input type="text" name="XiMaLv" value="@Model.User.XiMaLv" maxlength="3" style="width:80px;" />%（可开最大值@(Model.XiMaLv)%）</td>
+        </tr>
+        <tr id="trXiMaTypeExtParams" style="@Model.GetHideStyle(Model.IsHideXiMaTypeExtParams)">
+            <td class="text-right align-middle">洗码奖励：</td>
+            <td>
+                <label class="p-short-cell"><input class="ace" type="radio" name="XiMaTypeExtParams" value="true" @Html.Raw(Model.User.XiMaTypeExtParams ? "checked='checked'" : "") /><span class="lbl">@(Model.User.Type == UserType.会员帐号 ? "给会员" : "给代理商")</span></label>
+                <label class="p-short-cell"><input class="ace" type="radio" name="XiMaTypeExtParams" value="false" @Html.Raw(Model.User.XiMaTypeExtParams ? "" : "checked='checked'") /><span class="lbl">@(Model.User.Type == UserType.会员帐号 ? "不给会员" : "不给理商")</span></label>
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right align-middle">有效期：</td>
+            <td>
+                <input id="AvailableTime" name="AvailableTime" type="text" style="width: 130px" placeholder="选起始日期" value="@Model.User.AvailableTime.ToDateTime()" class="input-sm" onfocus="WdatePicker({el:'AvailableTime',dateFmt:'yyyy-MM-dd HH:mm:ss', maxDate:'@(Model.AvailableTime.ToDateTime())'})" />
+                <button class="btn btn-sm btn-info" type="button" onclick='$("#divAvailableTime").dialog("open")'>快捷选择</button>
+                <div id="divAvailableTime" style="display:none;">
+                    @foreach (var item in new AvailableTimeModel(Model.AvailableTime).GetAvailableTime(DateTime.Now))
+                    {
+                        <button class="btn btn-sm btn-info" style="margin:5px;" type="button" onclick='$("#AvailableTime").val("@item.Value.ToString("yyyy-MM-dd HH:mm:ss")");$("#divAvailableTime").dialog("close");'>@item.Key</button>
+                    }
+                </div>
+                （<span style="color: red">必填</span>）
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center align-middle">
+                <button type="button" class="btn btn-sm btn-success" onclick="btnSaveClick(this);">保 存<i class="icon-arrow-right icon-on-right bigger-110"></i></button>
+            </td>
+        </tr>
+    </table>
+</form>

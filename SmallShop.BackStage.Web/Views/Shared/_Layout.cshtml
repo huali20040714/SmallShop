@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>后台管理</title>
+    <!-- basic styles -->
+    @Styles.Render("~/assets/css/bootstrap.min.css")
+    @Styles.Render("~/assets/css/font-awesome.min.css")
+    <!-- page specific plugin styles -->
+    @Styles.Render("~/assets/css/jquery-ui-1.10.3.full.min.css")
+    <!-- ace styles -->
+    @Styles.Render("~/assets/css/ace.min.css")
+    @Styles.Render("~/assets/css/ace-rtl.min.css")
+    @Styles.Render("~/assets/css/ace-skins.min.css")
+
+    <!-- inline styles related to this page -->
+    <!-- ace settings handler -->
+    @Scripts.Render("~/assets/js/json2.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/ace-extra.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/jquery-1.11.1.min.js?v=" + StringUtil.Version)
+    <script type="text/javascript">if ("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");</script>
+    @Scripts.Render("~/assets/js/bootstrap.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/typeahead-bs2.min.js?v=" + StringUtil.Version)
+    <!-- page specific plugin scripts -->
+    <!-- ace scripts -->
+    @Scripts.Render("~/assets/js/ace-elements.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/ace.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/jquery-ui.1.11.3.min.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/jquery.ui.touch-punch.min.js?v=" + StringUtil.Version)
+
+    <!-- old scripts -->
+    @Scripts.Render("~/assets/js/Util.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/jquery.form.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/Pager/Pager.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/Loadmask/jquery.loadmask.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/Sticky/sticky.js?v=" + StringUtil.Version)
+    @Scripts.Render("~/assets/js/My97DatePicker/WdatePicker.js?v=" + StringUtil.Version)
+
+    @Scripts.Render("~/Views/Shared/_Layout.cshtml.js?v=" + StringUtil.Version)
+    @RenderSection("HeaderContent", false)
+</head>
+<body>
+    <div class="navbar navbar-default" id="navbar">
+        <script type="text/javascript">
+            try { ace.settings.check('navbar', 'fixed') } catch (e) { }
+        </script>
+
+        <div class="navbar-container" id="navbar-container">
+            <div class="navbar-header pull-left">
+                <a href="javascript:void(0);" class="navbar-brand-logo">
+                    <img src="~/Content/Logo/logo.png" width="32" height="32" alt="" />
+                </a>
+                <a href="javascript:void(0);" class="navbar-brand">
+                    <small>--后台登陆管理--</small>
+                </a>
+                <!-- /.brand -->
+            </div>
+            <!-- /.navbar-header -->
+
+            <div class="navbar-header pull-right" role="navigation">
+                <ul class="nav ace-nav">
+
+                    <li class="light-blue">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <img class="nav-user-photo" src="/assets/avatars/user-64.png" alt="" />
+                            <span class="user-info">
+                                <small>欢迎光临</small>
+                                <label class="user-info-name">@SmallShop.BackStage.Business.User.Current.User.LoginName</label>
+                            </span>
+                            <i class="icon-caret-down"></i>
+                        </a>
+
+                        <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                            @{Html.RenderPartial("_UserSettingMenu");}
+                            <li class="divider"></li>
+                            <li><a href="/Login/Logout"><i class="icon-off"></i>退出</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- /.ace-nav -->
+            </div>
+            <!-- /.navbar-header -->
+        </div>
+        <!-- /.container -->
+    </div>
+
+    <div class="main-container" id="main-container">
+        <script type="text/javascript">
+            try { ace.settings.check('main-container', 'fixed') } catch (e) { }
+        </script>
+
+        <div class="main-container-inner">
+            <a class="menu-toggler" id="menu-toggler" href="#">
+                <span class="menu-text"></span>
+            </a>
+
+            <div class="sidebar" id="sidebar">
+                <script type="text/javascript">
+                    try { ace.settings.check('sidebar', 'fixed') } catch (e) { }
+                </script>
+
+                <div class="sidebar-collapse" id="sidebar-collapse">
+                    <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+                </div>
+                <script type="text/javascript">
+                    try { ace.settings.check('sidebar', 'collapsed') } catch (e) { }
+                </script>
+
+                <ul class="nav nav-list">
+                    @Html.Raw(SmallShop.BackStage.Business.User.Current.FunTreeHtml)
+                </ul>
+                <!-- /.nav-list -->
+            </div>
+
+            <div class="main-content">
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <script type="text/javascript">
+                        try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+                    </script>
+                    <ul class="breadcrumb">
+                        @Html.Raw(SmallShop.BackStage.Business.BackStageLocation.Write())
+                    </ul>
+                    <!-- .breadcrumb -->
+                </div>
+
+                <div class="page-content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="bs-swipe-container">
+                                <div class="bs-swipe-scrollbar">
+                                    @RenderBody()
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.page-content -->
+            </div>
+            <!-- /.main-content -->
+
+            <div class="ace-settings-container" id="ace-settings-container">
+                <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+                    <i class="icon-cog bigger-150"></i>
+                </div>
+
+                <div class="ace-settings-box" id="ace-settings-box">
+                    <div>
+                        <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar" />
+                        <label class="lbl" for="ace-settings-navbar">固定导航条</label>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar" />
+                        <label class="lbl" for="ace-settings-sidebar">固定滑动条</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container" />
+                        <label class="lbl" for="ace-settings-add-container">
+                            切换窄屏
+                            <b></b>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- /#ace-settings-container -->
+
+        </div>
+        <!-- /.main-container-inner -->
+
+        <div class='dialog' id='dialog' style="display: none"><iframe id='frameDialog' frameborder='0' width='100%' height='100%'></iframe></div>
+        <div class='dialog' id='dialog-html' style="display: none"></div>
+        <div class='dialog' id='dialog-agentjstree' style="display: none"><iframe id='jstreeFrameDialog' frameborder='0' width='100%' height='100%'></iframe></div>
+
+        <div id="dialogAlertMessage" title="信息确认"><p id="AlertMessageBody" class="msgbody"></p></div>
+        <div id="dialogConfirmMessage" title="信息提问"><p id="ConfirmMessageBody" class="msgbody"></p></div>
+    </div>
+</body>
+</html>

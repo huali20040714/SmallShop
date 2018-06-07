@@ -1,0 +1,20 @@
+﻿<li><a target='_self' href='/Home/UpdatePassword'><i class='icon-key'></i>修改密码</a></li>
+@{
+    if (SmallShop.BackStage.Business.User.Current.HasPermission(PermissionType.系统管理_加密解密配置参数))
+    {
+        <li><a target='_self' href='/System/Decode'><i class='icon-cog'></i>加密配置参数</a></li>
+    }
+    if (SmallShop.BackStage.Business.User.Current.HasPermission(PermissionType.系统管理_初始化数据库) && ConfigHelper.CanInitAllSql)
+    {
+        <li><a href="javascript:void(0);" onclick="initAllSql();"><i class='icon-warning-sign'></i>初始化数据库</a></li>
+        <script type="text/javascript">
+            //初始化数据库
+            function initAllSql() {
+                if (!confirm("所有数据将被清除,确认初始化数据库？"))
+                    return;
+
+                autoResponseWriteDialog("数据库初始化中，请勿关闭窗口", "/System/InitAllSql");
+            }
+        </script>
+    }
+}

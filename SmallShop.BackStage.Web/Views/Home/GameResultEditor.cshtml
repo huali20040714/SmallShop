@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "~/Views/Shared/_Dialog.cshtml";
+}
+@section HeaderContent{
+    @Scripts.Render("~/Views/Home/GameResultEditor.cshtml.js?v=" + StringUtil.Version)
+    <style>
+        .resulttable .selected { color: red; }
+        .resulttable tr td:nth-child(2) { width: 60px; }
+    </style>
+    <script>
+        $(function () {
+            iniData(@Model.GameType.GetHashCode() , @Model.Result);
+        });
+    </script>
+}
+@model GameResultInfo
+
+<form action="/Home/SaveGameResult" method="post" id="mainForm">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <input name="Result" id="Result" value="@Model.Result" type="hidden" />
+    <table class="table top-noborder">
+        <tr>
+            <td>
+                @Html.Partial(string.Format("GameResultEditor{0}", (int)Model.GameType))
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center align-middle">
+                <button type="button" class="btn-lg btn-success" onclick="btnSaveClick(this,@((int)Model.GameType));">保 存</button>
+            </td>
+        </tr>
+    </table>
+</form>

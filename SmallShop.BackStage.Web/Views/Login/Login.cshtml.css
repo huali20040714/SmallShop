@@ -1,0 +1,4 @@
+﻿.tips.accounttips { top: 20px; display: none; }
+.tips { width: 260px; float: right; line-height: 30px; padding: 10px; border-radius: 2px; background: #fff; color: #666; line-height: 30px; text-align: left; font-size: 14px; position: absolute; top: 0; right: 60px; opacity: .9; box-shadow: 0 0 10px rgba(0,0,0,.2); z-index: 9999; }
+    .tips b { width: 30px; height: 30px; float: left; font-size: 30px; color: #fff; text-align: center; background: #f55; border-radius: 15px; margin: 0 8px 0 0; }
+    .tips .triangle { height: 0; width: 0; border: 10px solid #fff; border-color: transparent transparent transparent #fff; position: absolute; top: 50%; right: -20px; margin: -10px 0 0; }

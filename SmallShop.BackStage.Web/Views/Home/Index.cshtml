@@ -1,0 +1,38 @@
+﻿@model UserInfo
+
+<div class="space-6"></div>
+<div class="row">
+    <div class="col-sm-12 infobox-container">
+        <div class="infobox infobox-green infobox-small infobox-dark">
+            <div class="infobox-data">
+                <div class="infobox-content">姓名</div>
+                <span class="infobox-content">@Model.LoginName</span>
+            </div>
+        </div>
+        <div class="infobox infobox-blue infobox-small infobox-dark">
+            <div class="infobox-data">
+                <div class="infobox-content">余额</div>
+                <span class="infobox-content">@Model.Balance.ToDecimalString()</span>
+            </div>
+        </div>
+        <div class="infobox infobox-brown infobox-small infobox-dark">
+            <div class="infobox-data">
+                <div class="infobox-content">电话</div>
+                <div class="infobox-content">@Model.Tel</div>
+            </div>
+        </div>
+        <div class="infobox infobox-red infobox-small infobox-dark">
+            <div class="infobox-data">
+                <div class="infobox-content">有效期</div>
+                <div class="infobox-content">@Model.AvailableTime.ToDate()</div>
+            </div>
+        </div>
+        <div class="infobox infobox-grey infobox-small infobox-dark">
+            <div class="infobox-data">
+                <div class="infobox-content">注册日期</div>
+                <div class="infobox-content">@Model.CreateTime.ToDate()</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="space-24"></div>

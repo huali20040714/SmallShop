@@ -1,0 +1,51 @@
+﻿@{
+    Layout = "~/Views/Shared/_Dialog.cshtml";
+    var currentUser = SmallShop.BackStage.Business.User.Current.User;
+}
+@section HeaderContent{
+@Scripts.Render("~/Views/Home/SubAccountEditor.cshtml.js?v=" + StringUtil.Version)
+@Scripts.Render("~/Assets/js/jquery-ui.1.11.3.min.js?v=" + StringUtil.Version)
+    <style>
+        #Type { width: 160px; }
+    </style>
+}
+@model UserInfo
+
+<form action="/Home/SaveSubAccount" method="post" id="mainForm">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <table class="table top-noborder">
+        <tr>
+            <td class="text-right align-middle" style="width:100px;">帐号：</td>
+            <td><input type="text" @((Model.Id > 0) ? "disabled=\"disabled\"" : "") name="LoginName" value="@Model.LoginName" />（<span style="color: red">必填</span>）</td>
+        </tr>
+        @{ if (Model.Id == 0) {
+        <tr>
+            <td class="text-right align-middle">密码：</td>
+            <td><input type="password" name="Password" value="@Model.Password" />（<span style="color: red">必填</span>）</td>
+        </tr>
+        }}
+        <tr>
+            <td class="text-right align-middle">电话：</td>
+            <td><input type="text" name="Tel" value="@Model.Tel" maxlength="11"/></td>
+        </tr>
+        <tr>
+            <td class="text-right align-middle">有效期：</td>
+            <td>
+                <input id="AvailableTime" name="AvailableTime" type="text" style="width: 130px" placeholder="选起始日期" value="@Model.AvailableTime.ToDateTime()" class="input-sm" onfocus="WdatePicker({el:'AvailableTime',dateFmt:'yyyy-MM-dd HH:mm:ss', maxDate:'@(currentUser.AvailableTime.ToDateTime())'})" />
+                <button class="btn btn-sm btn-info" type="button" onclick='$("#divAvailableTime").dialog("open")'>快捷选择</button>
+                <div id="divAvailableTime" style="display:none;">
+                    @foreach (var item in new AvailableTimeModel(currentUser.AvailableTime).GetAvailableTime(DateTime.Now))
+                    {
+                        <button class="btn btn-sm btn-info" style="margin:5px;" type="button" onclick='$("#AvailableTime").val("@item.Value.ToString()");$("#divAvailableTime").dialog("close");'>@item.Key</button>
+                    }
+                </div>
+                （<span style="color: red">必填</span>）
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center align-middle">
+                <button type="button" class="btn btn-sm btn-success" onclick="btnSaveClick(this);">保 存<i class="icon-arrow-right icon-on-right bigger-110"></i></button>
+            </td>
+        </tr>
+    </table>
+</form>

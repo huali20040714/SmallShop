@@ -1,0 +1,43 @@
+﻿@section HeaderContent{
+    @Scripts.Render("~/Views/Home/SubAccount.cshtml.js?v=" + StringUtil.Version)
+}
+@Html.RenderPaginationHiddenInput()  @*绘制分页和排序使用到的隐藏变量*@
+
+<div class="row-fluid header">
+    <span class="span2"><a href="javascript:void(0);" onclick="subAccountEditor(0);" class="btn btn-sm btn-info"><i class="icon-plus align-center"></i>新增子帐号</a></span>
+    <span class="span8">
+        <select id="ddlVague" class="input-sm">
+            <option value="0">精确</option>
+            <option value="1">模糊</option>
+        </select>
+        @Html.Select(typeof(LockedType), "ddlIsLocked", true, "-1", "所有状态", "input-sm")
+        <input id="txtLoginName" placeholder="帐号查询" type="text" class="input-sm" value="@WebHelper.Params["LoginName"]" />
+        <input id="txtTel" placeholder="电话号码查询" type="text" class="input-sm" />
+        <input id="dtStart" name="dtStart" type="text" style="width: 90px" placeholder="选起始日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'dtEnd\')}'})" value="" class="input-sm" />
+        -
+        <input id="dtEnd" name="dtEnd" type="text" style="width: 90px" placeholder="选结束日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'dtStart\')}'})" value="" class="input-sm" />
+    </span>
+    <span class="span2">
+        <label class="pull-right inline">
+            <a class="btn btn-sm btn-success" id="btnSearch"><i class="icon-search bigger-110"></i>搜索</a>
+        </label>
+    </span>
+</div>
+
+<div class="no-margin">
+    <table class="table col-md-12">
+        <thead>
+            <tr>
+                @Html.RenderTh("帐号", UserCols.LoginName)
+                @Html.RenderTh("电话", UserCols.Tel)
+                @Html.RenderTh("状态", UserCols.IsLocked)
+                @Html.RenderTh("有效期", UserCols.AvailableTime)
+                @Html.RenderTh("创建时间", UserCols.CreateTime)
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody class="content"></tbody>
+    </table>
+</div>
+
+@Html.RenderPagination() @*绘制分页*@

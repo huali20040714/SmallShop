@@ -1,0 +1,36 @@
+﻿@section HeaderContent{
+    @Scripts.Render("~/Views/System/Role.cshtml.js?v=" + StringUtil.Version)
+    <style>
+        #ddlOperationType { width: 120px; }
+    </style>
+}
+@Html.RenderPaginationHiddenInput()  @*绘制分页和排序使用到的隐藏变量*@
+
+<div class="row-fluid header">    
+    <span class="span2"><a href="javascript:void(0);" onclick="roleEditor(0);" class="btn btn-sm btn-info"><i class="icon-plus align-center"></i>新增角色</a></span>
+    <span class="span8">
+        @Html.Select(typeof(InnerType), "ddlIsInner", true, "-1", "所有状态", "input-sm")
+    </span>
+
+    <span class="span2">
+        <label class="pull-right inline">
+            <a class="btn btn-sm btn-success" id="btnSearch"><i class="icon-search bigger-110"></i>搜索</a>
+        </label>
+    </span>
+</div>
+
+<div class="no-margin">
+    <table class="table col-md-12">
+        <thead>
+            <tr>
+                @Html.RenderTh("名称", RoleCols.Name)
+                @Html.RenderTh("内置角色", RoleCols.IsInner)
+                @Html.RenderTh("创建时间", RoleCols.CreateTime)
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody class="content"></tbody>
+    </table>
+</div>
+
+@Html.RenderPagination() @*绘制分页*@
